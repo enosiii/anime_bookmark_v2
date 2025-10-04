@@ -1,0 +1,5 @@
+# Secrets
+.env
+
+# Node modules (for serverless function)
+node_modules

@@ -4,19 +4,19 @@
     "name": "Anime Bookmark Version (v2.0)",
     "icons": [
         {
-            "src": "/anime_bookmark_v2/abm192.png",
+            "src": "abm192.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "/anime_bookmark_v2/abm512.png",
+            "src": "abm512.png",
             "sizes": "512x512",
             "type": "image/png"
         }
     ],
-    "start_url": "/anime_bookmark_v2/index.html",
+    "start_url": "index.html",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#ffffff",
-    "scope": "/anime_bookmark_v2/"
+    "scope": "/"
 }

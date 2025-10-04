@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // **IMPORTANT:** The secrets (API Key, Base ID, Table Name) have been REMOVED.
     // All communication now goes through the secure serverless function proxy.
-     const API_ENDPOINT = '/api/anime';
+    const API_ENDPOINT = '/api/anime';
 
     // NOW (Absolute Path - good for local Live Server testing):
     // const API_ENDPOINT = 'https://anime-bookmark-v2.vercel.app/api/anime'; 
@@ -119,39 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // // Submit new anime using the API proxy
-    // submitButton.addEventListener('click', async () => {
-    //     const id = animeIdInput.value.trim();
-    //     const title = animeTitleInput.value.trim();
-
-    //     if (id && title) {
-    //         try {
-    //             // Sending POST request to the API proxy
-    //             const response = await fetch(API_ENDPOINT, {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                 },
-    //                 // Send only the required fields. Proxy adds Airtable structure/auth.
-    //                 body: JSON.stringify({ id, title }), 
-    //             });
-
-    //             if (response.ok) {
-    //                 fetchAnimeData(true); // Force update cache
-    //                 animeIdInput.value = '';
-    //                 animeTitleInput.value = '';
-    //                 notification.textContent = `${title} added to the list!`;
-    //                 notification.classList.remove('hidden');
-    //                 setTimeout(() => notification.classList.add('hidden'), 7000);
-    //             } else {
-    //                 throw new Error(`POST failed with status: ${response.status}`);
-    //             }
-    //         } catch (error) {
-    //             console.error('Error adding anime: ', error);
-    //         }
-    //     }
-    // });
-
     // Submit new anime using the API proxy
     submitButton.addEventListener('click', async () => {
         const id = animeIdInput.value.trim();
@@ -159,10 +126,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (id && title) {
             try {
-                // ... (fetch code remains the same)
+                // Sending POST request to the API proxy
                 const response = await fetch(API_ENDPOINT, {
                     method: 'POST',
-                    // ... (headers and body remain the same)
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    // Send only the required fields. Proxy adds Airtable structure/auth.
                     body: JSON.stringify({ id, title }), 
                 });
 
@@ -170,53 +140,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     fetchAnimeData(true); // Force update cache
                     animeIdInput.value = '';
                     animeTitleInput.value = '';
-                    // NEW: Use the improved notification function
-                    showNotification(`🎉 ${title} successfully added!`, true); 
+                    notification.textContent = `${title} added to the list!`;
+                    notification.classList.remove('hidden');
+                    setTimeout(() => notification.classList.add('hidden'), 7000);
                 } else {
                     throw new Error(`POST failed with status: ${response.status}`);
                 }
             } catch (error) {
                 console.error('Error adding anime: ', error);
-                // NEW: Show error notification
-                showNotification('❌ Failed to add anime. Please try again.', false);
             }
-        } else {
-            // NEW: Show error for missing input
-            showNotification('⚠️ Please enter both Anime ID and Title.', false);
         }
     });
-
-
-
-    // Confirm delete using the API proxy
-    // confirmDeleteButton.addEventListener('click', async () => {
-    //     const selectedAnime = Array.from(document.querySelectorAll('.delete-list-item input:checked'))
-    //         .map(input => input.value); // These are the Airtable record IDs
-
-    //     if (selectedAnime.length > 0) {
-    //         if (confirm(`🗑️ Do you want to delete the Anime:\n🔹${selectedAnime.map(recordId => animeData.find(anime => anime.recordId === recordId).title).join('\n🔹')}`)) {
-    //             try {
-    //                 // Sending DELETE request with record IDs to the API proxy
-    //                 const response = await fetch(API_ENDPOINT, {
-    //                     method: 'DELETE',
-    //                     headers: { 'Content-Type': 'application/json' },
-    //                     // Send an array of record IDs to be deleted
-    //                     body: JSON.stringify({ recordIds: selectedAnime }), 
-    //                 });
-
-    //                 if (response.ok) {
-    //                     fetchAnimeData(true); // Force update cache
-    //                     renderDeleteList();
-    //                     deleteContainer.classList.add('hidden');
-    //                 } else {
-    //                     throw new Error(`DELETE failed with status: ${response.status}`);
-    //                 }
-    //             } catch (error) {
-    //                 console.error('Error deleting anime: ', error);
-    //             }
-    //         }
-    //     }
-    // });
 
     // Confirm delete using the API proxy
     confirmDeleteButton.addEventListener('click', async () => {
@@ -224,15 +158,13 @@ document.addEventListener('DOMContentLoaded', () => {
             .map(input => input.value); // These are the Airtable record IDs
 
         if (selectedAnime.length > 0) {
-            const titlesToDelete = selectedAnime.map(recordId => animeData.find(anime => anime.recordId === recordId).title);
-            
-            // Keep the browser confirm for the critical delete action, but improve the text
-            if (confirm(`🗑️ Are you sure you want to delete the following Anime:\n\n${titlesToDelete.join('\n')}`)) {
+            if (confirm(`🗑️ Do you want to delete the Anime:\n🔹${selectedAnime.map(recordId => animeData.find(anime => anime.recordId === recordId).title).join('\n🔹')}`)) {
                 try {
-                    // ... (fetch code remains the same)
+                    // Sending DELETE request with record IDs to the API proxy
                     const response = await fetch(API_ENDPOINT, {
                         method: 'DELETE',
                         headers: { 'Content-Type': 'application/json' },
+                        // Send an array of record IDs to be deleted
                         body: JSON.stringify({ recordIds: selectedAnime }), 
                     });
 
@@ -240,20 +172,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         fetchAnimeData(true); // Force update cache
                         renderDeleteList();
                         deleteContainer.classList.add('hidden');
-                        // NEW: Use the improved success notification
-                        showNotification(`✅ Successfully deleted ${titlesToDelete.length} item(s).`, true);
                     } else {
                         throw new Error(`DELETE failed with status: ${response.status}`);
                     }
                 } catch (error) {
                     console.error('Error deleting anime: ', error);
-                    // NEW: Show error notification
-                    showNotification('❌ Failed to delete anime. Please try again.', false);
                 }
             }
-        } else {
-            // NEW: Show notification if nothing is selected
-            showNotification('⚠️ Please select at least one anime to delete.', false);
         }
     });
 

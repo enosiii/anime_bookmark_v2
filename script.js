@@ -15,7 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // **IMPORTANT:** The secrets (API Key, Base ID, Table Name) have been REMOVED.
     // All communication now goes through the secure serverless function proxy.
-    const API_ENDPOINT = '/api/anime'; 
+    const API_ENDPOINT = '/api/anime';
+
+    // NOW (Absolute Path - good for local Live Server testing):
+    // const API_ENDPOINT = 'https://anime-bookmark-v2.vercel.app/api/anime'; 
+
 
     let animeData = [];
 

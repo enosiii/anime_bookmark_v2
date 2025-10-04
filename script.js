@@ -159,29 +159,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (id && title) {
             try {
-                // ... (fetch code remains the same)
+                // Sending POST request to the API proxy
                 const response = await fetch(API_ENDPOINT, {
                     method: 'POST',
-                    // ... (headers and body remain the same)
+                    // 👇 This is the missing piece! It tells the server the body is JSON.
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    // Send only the required fields. Proxy adds Airtable structure/auth.
                     body: JSON.stringify({ id, title }), 
                 });
 
                 if (response.ok) {
+                    // ... (rest of success logic)
                     fetchAnimeData(true); // Force update cache
                     animeIdInput.value = '';
                     animeTitleInput.value = '';
-                    // NEW: Use the improved notification function
                     showNotification(`🎉 ${title} successfully added!`, true); 
                 } else {
+                    // If the serverless function failed (e.g., bad request 400),
+                    // it throws an error here.
                     throw new Error(`POST failed with status: ${response.status}`);
                 }
             } catch (error) {
                 console.error('Error adding anime: ', error);
-                // NEW: Show error notification
-                showNotification('❌ Failed to add anime. Please try again.', false);
+                // Show error notification
+                showNotification('❌ Failed to add anime. Please check console for details.', false);
             }
         } else {
-            // NEW: Show error for missing input
+            // Show error for missing input
             showNotification('⚠️ Please enter both Anime ID and Title.', false);
         }
     });

@@ -4,7 +4,7 @@ const CACHE_NAME = 'anime-bookmark-cache-v1'; // ← Increment version
 const ASSETS_TO_CACHE = [
     '/anime_bookmark_v2/',
     '/anime_bookmark_v2/index.html',
-    '/anime_bookmark_v2/styles2.css',
+    '/anime_bookmark_v2/styles3.css',
     '/anime_bookmark_v2/script.js',
     '/anime_bookmark_v2/checkbox.css',
     '/anime_bookmark_v2/abm192.png',
